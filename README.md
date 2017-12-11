@@ -22,12 +22,8 @@ Swift 3.0+
  
  单文件下载
  ````
-    ALDownloadManager.shared.download(url:  self.testUrl)?.progressChangeBlock = { (progress) in
-                    let completed: Float = Float(progress.completedUnitCount)
-                    let total: Float = Float(progress.totalUnitCount)
-                    self.progressView.progress = (completed/total)
-                    self.progressLab.text = "\(completed/total)"
-                }
+ALDownloadManager.shared.download(url: self.testUrl)?.downloadProgress(nil).downloadResponse(nil)
+                    
 ````
  多文件同时下载
  ````
