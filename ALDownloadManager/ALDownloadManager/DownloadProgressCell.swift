@@ -69,11 +69,12 @@ class DownloadProgressCell: UITableViewCell {
         }
     }
     func parseDownloadInfo(info: ALDownloadInfo?) {
-        info?.progressChangeBlock = { (progress) in
+        
+        info?.downloadProgress({ (progress) in
             let completed: Float = Float(progress.completedUnitCount)
             let total: Float = Float(progress.totalUnitCount)
             self.progressView.progress = (completed/total)
-        }
+        })
         info?.stateChangeBlock = { [weak self] state in
             self?.parseDownloadState(state: state)
         }

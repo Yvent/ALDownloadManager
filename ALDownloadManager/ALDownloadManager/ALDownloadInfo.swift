@@ -7,7 +7,7 @@ import Alamofire
 public enum ALDownloadState: Int {
     case None = 0  // 闲置状态
     case Download = 1  // 开始下载
-//    case Suspened = 2 // 暂停下载
+    //    case Suspened = 2 // 暂停下载
     case Cancel = 3 // 取消下载
     case Wait = 4 // 等待下载
     case Completed = 5 // 完成下载
@@ -16,6 +16,8 @@ public enum ALDownloadState: Int {
 
 typealias ALDownloadStateBlock = (_ state: ALDownloadState)-> Void
 typealias ALDownloadProgressBlock = (_ progress: Progress)-> Void
+typealias ALDownloadResponseBlock = (_ response: DefaultDownloadResponse)-> Void
+
 
 class ALDownloadInfo: NSObject {
     
@@ -32,6 +34,8 @@ class ALDownloadInfo: NSObject {
     var stateChangeBlock: ALDownloadStateBlock?
     /**  返回下载进度  */
     var progressChangeBlock: ALDownloadProgressBlock?
+    var responsChangeBlock: ALDownloadResponseBlock?
+    
     /* 属性观察器，内建的 KVO 观察，限于对自身属性的观察 */
     var state: ALDownloadState? = ALDownloadState.None {
         willSet{
@@ -45,6 +49,14 @@ class ALDownloadInfo: NSObject {
         willSet{
             if let progressBlock = self.progressChangeBlock,let newProgress = newValue {
                 DispatchQueue.main.async {progressBlock(newProgress)}
+            }
+        }
+        didSet{}
+    }
+    private var respons: DefaultDownloadResponse? {
+        willSet{
+            if let responsBlock = self.responsChangeBlock,let newProgress = newValue {
+                DispatchQueue.main.async {responsBlock(newProgress)}
             }
         }
         didSet{}
@@ -63,6 +75,8 @@ class ALDownloadInfo: NSObject {
                 self?.cancelledData = defresponse.resumeData
             }).downloadProgress(closure: { (progress) in
                 self.progress = progress
+            }).response(completionHandler: { (defaultResponse) in
+                self.respons = defaultResponse
             })
         }else{
             let destination = createDestination(destinationPath: destinationPath)
@@ -71,6 +85,8 @@ class ALDownloadInfo: NSObject {
                     self?.cancelledData = defresponse.resumeData
                 }).downloadProgress(closure: { (progress) in
                     self.progress = progress
+                }).response(completionHandler: { (defaultResponse) in
+                    self.respons = defaultResponse
                 })
             }
         }
@@ -90,7 +106,16 @@ class ALDownloadInfo: NSObject {
         downloadRequest?.cancel()
         self.state = ALDownloadState.None
     }
-    
+    @discardableResult
+    func downloadProgress(_ progress: ALDownloadProgressBlock?) -> Self  {
+        self.progressChangeBlock = progress
+        return self
+    }
+    @discardableResult
+    func downloadResponse(_ response: ALDownloadResponseBlock?) -> Self {
+        self.responsChangeBlock = response
+        return self
+    }
     /**  创建文件下载完成的储存位置
      *    destinationPath = nil 时会在Documents下创建ALDownloadedFolder文件夹
      */

@@ -31,7 +31,7 @@ class ALDownloadManager: NSObject {
     
     
     /**  下载 */
-    @discardableResult // 待返回值得方法不会警告
+    @discardableResult 
     func download(url: String?) -> ALDownloadInfo?{
         let info = self.downloadInfoForURL(url: url)
         info?.download()
