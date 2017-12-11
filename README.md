@@ -17,6 +17,8 @@ iOS 9.0+
 Xcode 8.0+
 Swift 3.0+
  ````
+ pod 'Alamofire'
+ 将  AlamofireExtension.swift,ALDownloadManager.swift,ALDownloadInfo.swift 3个文件加入项目中
  
  单文件下载
  ````
