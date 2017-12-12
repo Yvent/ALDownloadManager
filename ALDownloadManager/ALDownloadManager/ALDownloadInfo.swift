@@ -36,7 +36,6 @@ class ALDownloadInfo: NSObject {
     var progressChangeBlock: ALDownloadProgressBlock?
     var responsChangeBlock: ALDownloadResponseBlock?
     
-    /* 属性观察器，内建的 KVO 观察，限于对自身属性的观察 */
     var state: ALDownloadState? = ALDownloadState.None {
         willSet{
             if let stateBlock = self.stateChangeBlock,let newState = newValue {
