@@ -1,11 +1,13 @@
 # ALDownloadManager
-A progressive download manager for Alamofire
+A progressive download manager for Alamofire （Alamofire下载器）
+
+
  
- 顺序下载 
+Sequential Download（顺序下载 ）
 
  ![image](https://github.com/Yvent/ALDownloadManager/blob/master/Resource/2017-12-11%2011_49_36.gif)  
- 
-同时下载
+
+Downloading at the same time （同时下载）
 
  ![image](https://github.com/Yvent/ALDownloadManager/blob/master/Resource/2017-12-11%2011_50_44.gif)
 
@@ -18,18 +20,20 @@ Xcode 8.0+
 Swift 3.0+
  ````
  pod 'Alamofire'
- 将  AlamofireExtension.swift,ALDownloadManager.swift,ALDownloadInfo.swift 3个文件加入项目中
  
- 单文件下载
+ Add AlamofireExtension.swift,ALDownloadManager.swift,ALDownloadInfo.swift to the project 
+ （将  AlamofireExtension.swift,ALDownloadManager.swift,ALDownloadInfo.swift 3个文件加入项目中）
+ 
+Single file download （单文件下载）
  ````
 ALDownloadManager.shared.download(url: self.testUrl)?.downloadProgress(nil).downloadResponse(nil)
                     
 ````
- 多文件同时下载
+Multi file download at the same time （多文件同时下载）
  ````
- ALDownloadManager.shared.changeDownloadState()
+ALDownloadManager.shared.changeDownloadState()
 ````
- 多文件顺序下载
- ````
-  ALDownloadManager.shared.changeWaitState(completeClose: nil)
+Multi file sequential downloads （多文件顺序下载）
+````
+ALDownloadManager.shared.changeWaitState(completeClose: nil)
 ````
