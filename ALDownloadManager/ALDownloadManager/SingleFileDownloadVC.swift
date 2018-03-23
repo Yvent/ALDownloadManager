@@ -60,8 +60,11 @@ class SingleFileDownloadVC: UIViewController{
         alertVC.addTextField { (tf) in
             tf.placeholder = "\(self.testUrl)"
         }
+        
+       
         let acSure = UIAlertAction(title: "下载", style: .default) { (sureact) in
             if  let downloadUrl = alertVC.textFields?.first?.text , downloadUrl != ""{
+                
                 if let info = ALDownloadManager.shared.download(url: downloadUrl) {
                     info.progressChangeBlock = { (progress) in
                         let completed: Float = Float(progress.completedUnitCount)
@@ -69,6 +72,10 @@ class SingleFileDownloadVC: UIViewController{
                         self.progressView.progress = (completed/total)
                         self.progressLab.text = "\(completed/total)"
                     }
+                    
+                    info.downloadResponse({ (reponse) in
+                        print("\(reponse.error)")
+                    })
                 }else{
                     self.alTip()
                 }

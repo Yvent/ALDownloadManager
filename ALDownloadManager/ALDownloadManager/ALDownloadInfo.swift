@@ -70,6 +70,7 @@ class ALDownloadInfo: NSObject {
     func download() {
         if let resumeData = cancelledData {
             let destination = createDestination(destinationPath: destinationPath)
+    
             downloadRequest = manager?.download(resumingWith: resumeData, to: destination).response(completionHandler: { [weak self] (defresponse) in
                 self?.cancelledData = defresponse.resumeData
             }).downloadProgress(closure: { (progress) in

@@ -127,6 +127,7 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
             }else{
                 if let request =   ALDownloadManager.shared.download(url: self.testUrl) {
                     print("\(request)")
+                
                     self.downloadurls.append(self.testUrl)
                     self.alTableView.reloadData()
                 }else{

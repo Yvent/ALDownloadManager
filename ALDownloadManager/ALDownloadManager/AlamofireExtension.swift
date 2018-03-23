@@ -14,6 +14,7 @@ import Alamofire
 extension DownloadRequest {
     
     func downloadProgressValue(value: @escaping (Float)->())  {
+    
         self.downloadProgress { (progress) in
             let completed: Float = Float(progress.completedUnitCount)
             let total: Float = Float(progress.totalUnitCount)
