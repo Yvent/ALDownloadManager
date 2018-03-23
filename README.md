@@ -1,6 +1,8 @@
 # ALDownloadManager
 A progressive download manager for Alamofire （Alamofire下载器）
 
+The default support breakpoint continues.
+
 
  
 Sequential Download（顺序下载 ）
@@ -39,6 +41,19 @@ info.progressChangeBlock = { (progress) in
                   
 }
 ```
+#### Suspend the DownloadManager
+The default support breakpoint continues.
+
+```swift
+ALDownloadManager.shared.suspend(url: downloadUrl)
+```
+#### Continue a suspended DownloadManager.
+The default support breakpoint continues.
+
+```swift
+ALDownloadManager.shared.download(url: downloadUrl)
+```
+
 
  pod 'Alamofire'
   ````
