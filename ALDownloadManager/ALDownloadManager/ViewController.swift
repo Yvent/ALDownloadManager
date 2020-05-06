@@ -17,33 +17,29 @@ let ScreenHeight = UIScreen.main.bounds.height
 
 class ViewController: UIViewController {
 
-
     
-    let downloadStyles: Array<Dictionary<String,UIViewController.Type>> = [["单文件下载":SingleFileDownloadVC.self],["多文件下载":MultipleFilesDownloadSTVC.self]]
-    
+    let downloadStyles: Array<Dictionary<String,UIViewController.Type>> = [["单文件下载":SingleFileDownloadVC.self],
+                                                                           ["多文件下载":MultipleFilesDownloadSTVC.self]]
     var alTableView: UITableView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
-        
     }
 
-    override func didReceiveMemoryWarning() {super.didReceiveMemoryWarning()}
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
 
     func setupUI() {
-        
-        self.title = "ALDownloadManager"
+        title = "ALDownloadManager"
         let tabFrame: CGRect = CGRect(x: 0, y: 0, width: ScreenWidth, height: ScreenHeight)
         alTableView = UITableView(frame: tabFrame, style: .plain)
         alTableView.rowHeight = 60
         alTableView.delegate = self
         alTableView.dataSource = self
         alTableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
-        self.view.addSubview(alTableView)
-        
+        view.addSubview(alTableView)
     }
 
 }
@@ -52,6 +48,7 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return downloadStyles.count
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         var cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")

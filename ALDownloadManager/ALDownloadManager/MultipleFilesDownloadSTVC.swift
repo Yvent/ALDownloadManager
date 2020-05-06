@@ -15,12 +15,10 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
     
     let testUrl: String = "http://song.paohaile.com/30854966.mp3"
     
-    var downloadurls = ["http://120.25.226.186:32812/resources/videos/minion_01.mp4",
-                        "http://120.25.226.186:32812/resources/videos/minion_02.mp4",
-                        "http://120.25.226.186:32812/resources/videos/minion_03.mp4",
-                        "http://120.25.226.186:32812/resources/videos/minion_04.mp4",
-                        "http://120.25.226.186:32812/resources/videos/minion_05.mp4",
-                        "http://120.25.226.186:32812/resources/videos/minion_06.mp4"]
+    var downloadurls = ["https://central.github.com/deployments/desktop/desktop/latest/darwin",
+                        "https://central.github.com/deployments/desktop/desktop/latest/win32"]
+    
+    
     let alTableView: UITableView = {
         let tabv = UITableView(frame: CGRect.zero, style: .plain)
         tabv.rowHeight = 80
@@ -68,13 +66,11 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
         self.view.addSubview(alTableView)
         createToolView()
     }
+    
     func addNavRightItem() {
-        let btn = UIButton(type: .custom)
-        btn.frame = CGRect(x: 0, y: 0, width: 70, height: 35)
-        btn.setTitle("添加", for: .normal)
-        btn.setTitleColor(UIColor.black, for: .normal)
-        btn.addTarget(self, action: #selector(navRightItemClicked), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn)
+       let redoBtn = UIBarButtonItem(barButtonSystemItem: .redo, target: self, action: #selector(didRedoBtn))
+       let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didAddBtn))
+        navigationItem.rightBarButtonItems = [redoBtn, addBtn]
     }
     func createToolView() {
         alToolView.frame = CGRect(x: 0, y: ScreenHeight-60, width: ScreenWidth, height: 60)
@@ -86,63 +82,76 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
         alToolView.addSubview(suspendAllBtn)
         alToolView.addSubview(sequentialAllBtn)
     }
-    @objc func navRightItemClicked()  {
+    
+    @objc
+    func didRedoBtn() {
+        print("didRedoBtn")
+    }
+    
+    @objc
+    func didAddBtn() {
         inputUrl()
     }
     
     //暂停或恢复所有
+    @objc
     func didsuspendAllBtn() {
-        if self.suspendAllBtn.isSelected == true {
-            self.suspendAllBtn.isSelected = false
-            ALDownloadManager.shared.suspendAll()
-        }else{
-            self.suspendAllBtn.isSelected = true
-            ALDownloadManager.shared.resumeAll()
-        }
+        
+//        ALDownloadManager.multipleDownload(urls: downloadurls)
+        
+//        if self.suspendAllBtn.isSelected == true {
+//            self.suspendAllBtn.isSelected = false
+//            ALDownloadManager.suspendAll()
+//        }else{
+//            self.suspendAllBtn.isSelected = true
+//            ALDownloadManager.resumeAll()
+//        }
     }
+    
     //顺序下载
+    @objc
     func didsequentialAllBtn() {
         if sequentialAllBtn.isSelected == true {
             sequentialAllBtn.isSelected = false
-            ALDownloadManager.shared.changeDownloadState()
+            ALDownloadManager.changeDownloadState()
         }else{
             sequentialAllBtn.isSelected = true
-            ALDownloadManager.shared.changeWaitState(completeClose: nil)
+            ALDownloadManager.changeWaitState(completeClose: nil)
         }
     }
     
     func inputUrl() {
-        let alertVC = UIAlertController(title: "新建下载任务", message: nil, preferredStyle: UIAlertControllerStyle.alert)
-        alertVC.addTextField { (tf) in
-            tf.placeholder = "\(self.testUrl)"
-        }
-        let acSure = UIAlertAction(title: "下载", style: .default) { (sureact) in
-            if  let downloadUrl = alertVC.textFields?.first?.text , downloadUrl != ""{
-                if  let info =   ALDownloadManager.shared.download(url: downloadUrl), let url = info.downloadurl{
-                    self.downloadurls.append(url)
-                    self.alTableView.reloadData()
-                }else{
-                    self.alTip()
-                }
-            }else{
-                if let request =   ALDownloadManager.shared.download(url: self.testUrl) {
-                    print("\(request)")
-                
-                    self.downloadurls.append(self.testUrl)
-                    self.alTableView.reloadData()
-                }else{
-                    self.alTip()
-                }
-            }
-        }
-        let acCancel = UIAlertAction(title: "取消", style: .cancel) { (sureact) in }
-        alertVC.addAction(acSure)
-        alertVC.addAction(acCancel)
-        self.present(alertVC, animated: true, completion: nil)
+//        let alertVC = UIAlertController(title: "新建下载任务", message: nil, preferredStyle: UIAlertController.Style.alert)
+//        alertVC.addTextField { (tf) in
+//            tf.placeholder = "\(self.testUrl)"
+//        }
+//        let acSure = UIAlertAction(title: "下载", style: .default) { (sureact) in
+//            if  let downloadUrl = alertVC.textFields?.first?.text , downloadUrl != ""{
+//                if  let info =  ALDownloadManager.download(url: downloadUrl), let url = info.downloadurl{
+//                    self.downloadurls.append(url)
+//                    self.alTableView.reloadData()
+//                }else{
+//                    self.alTip()
+//                }
+//            }else{
+//                if let request =   ALDownloadManager.download(url: self.testUrl) {
+//                    print("\(request)")
+//                    
+//                    self.downloadurls.append(self.testUrl)
+//                    self.alTableView.reloadData()
+//                }else{
+//                    self.alTip()
+//                }
+//            }
+//        }
+//        let acCancel = UIAlertAction(title: "取消", style: .cancel) { (sureact) in }
+//        alertVC.addAction(acSure)
+//        alertVC.addAction(acCancel)
+//        self.present(alertVC, animated: true, completion: nil)
     }
     
     func alTip() {
-        let alertVC = UIAlertController(title: "请勿重复下载", message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        let alertVC = UIAlertController(title: "请勿重复下载", message: nil, preferredStyle: UIAlertController.Style.alert)
         let acCancel = UIAlertAction(title: "知道了", style: .cancel) { (sureact) in }
         alertVC.addAction(acCancel)
         self.present(alertVC, animated: true, completion: nil)
@@ -154,7 +163,7 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let Identifier = "DownloadProgressCell\(indexPath.row)"
-        if  let cell  = tableView.dequeueReusableCell(withIdentifier: Identifier) as? DownloadProgressCell {
+        if let cell  = tableView.dequeueReusableCell(withIdentifier: Identifier) as? DownloadProgressCell {
             cell.downloadurl = downloadurls[indexPath.row]
             return   cell
         }else{

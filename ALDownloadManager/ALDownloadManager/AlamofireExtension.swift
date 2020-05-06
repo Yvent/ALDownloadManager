@@ -13,12 +13,11 @@ import Alamofire
 
 extension DownloadRequest {
     
+    /// 下载进度
     func downloadProgressValue(value: @escaping (Float)->())  {
-    
-        self.downloadProgress { (progress) in
+        downloadProgress { (progress) in
             let completed: Float = Float(progress.completedUnitCount)
             let total: Float = Float(progress.totalUnitCount)
-            
             value(completed/total)
         }
     }

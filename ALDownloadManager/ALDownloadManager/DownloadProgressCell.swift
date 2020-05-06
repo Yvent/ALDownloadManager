@@ -10,12 +10,25 @@ import UIKit
 
 class DownloadProgressCell: UITableViewCell {
     
+    var downloadInfoId: String!
     
+    // TODO: 刷新会重复下载
     var downloadurl: String?{
         didSet {
-            self.fileNameLab.text = (downloadurl! as NSString).lastPathComponent
-            let info = ALDownloadManager.shared.downloadInfoForURL(url: downloadurl)
-            parseDownloadInfo(info: info)
+            fileNameLab.text = (downloadurl! as NSString).lastPathComponent
+            downloadInfoId = downloadurl
+            ALDownloadInfo().download(url: downloadurl!, destinationPath: nil)
+                .downloadProgress({ [weak self] (progress) in
+                    
+                    guard self?.downloadInfoId == self?.downloadurl else {
+                        return
+                    }
+                    let completed: Float = Float(progress.completedUnitCount)
+                    let total: Float = Float(progress.totalUnitCount)
+                    self?.progressView.progress = (completed/total)
+                }).downloadResponse { (response) in
+                    print(response)
+            }
         }
     }
     
@@ -24,7 +37,6 @@ class DownloadProgressCell: UITableViewCell {
         view.tintColor = UIColor.black
         view.progress = 0
         return view
-        
     }()
     
     let fileNameLab: UILabel = {
@@ -39,7 +51,7 @@ class DownloadProgressCell: UITableViewCell {
         return btn
     }()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         setupUI()
@@ -58,18 +70,20 @@ class DownloadProgressCell: UITableViewCell {
         self.addSubview(progressView)
         self.addSubview(downloadBtn)
     }
+    
+    @objc
     func didDownloadBtn()  {
-        let info = ALDownloadManager.shared.downloadInfoForURL(url: self.downloadurl)
-        if info?.state == ALDownloadState.Download {
-            ALDownloadManager.shared.suspend(url: self.downloadurl)
-        }else if  info?.state == ALDownloadState.Cancel || info?.state == ALDownloadState.None  {
-            ALDownloadManager.shared.download(url: self.downloadurl)
-        }else if  info?.state == ALDownloadState.Wait  {
-            ALDownloadManager.shared.download(url: self.downloadurl)
+        guard let info = ALDownloadManager.getInfoForURL(url: downloadurl) else {return}
+        if info.state == ALDownloadState.Download {
+            ALDownloadManager.suspend(url: downloadurl)
+        }else if info.state == ALDownloadState.Cancel || info.state == ALDownloadState.None  {
+            ALDownloadManager.download(url: downloadurl)
+        }else if info.state == ALDownloadState.Wait  {
+            ALDownloadManager.download(url: downloadurl)
         }
     }
+    
     func parseDownloadInfo(info: ALDownloadInfo?) {
-        
         info?.downloadProgress({ (progress) in
             let completed: Float = Float(progress.completedUnitCount)
             let total: Float = Float(progress.totalUnitCount)
@@ -78,17 +92,19 @@ class DownloadProgressCell: UITableViewCell {
         info?.stateChangeBlock = { [weak self] state in
             self?.parseDownloadState(state: state)
         }
-        self.parseDownloadState(state: info?.state)
+        parseDownloadState(state: info?.state)
     }
+    
     func parseDownloadState(state: ALDownloadState?)  {
         if state == ALDownloadState.Download {
-            self.downloadBtn.setImage(UIImage(named: "pause"), for: .normal)
-        }else if  state == ALDownloadState.Cancel || state == ALDownloadState.None  {
-            self.downloadBtn.setImage(UIImage(named: "download"), for: .normal)
-        }else if  state == ALDownloadState.Wait  {
-            self.downloadBtn.setImage(UIImage(named: "clock"), for: .normal)
-        }else if  state == ALDownloadState.Completed  {
-            self.downloadBtn.setImage(UIImage(named: "check"), for: .normal)
+            downloadBtn.setImage(UIImage(named: "pause"), for: .normal)
+        }else if state == ALDownloadState.Cancel || state == ALDownloadState.None  {
+            downloadBtn.setImage(UIImage(named: "download"), for: .normal)
+        }else if state == ALDownloadState.Wait  {
+            downloadBtn.setImage(UIImage(named: "clock"), for: .normal)
+        }else if state == ALDownloadState.Completed  {
+            downloadBtn.setImage(UIImage(named: "check"), for: .normal)
         }
     }
+    
 }
