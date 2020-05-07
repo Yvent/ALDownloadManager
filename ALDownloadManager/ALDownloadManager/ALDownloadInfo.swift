@@ -3,7 +3,7 @@ import Alamofire
 public enum ALDownloadState: Int {
     case None = 0  // 闲置状态
     case Download = 1  // 开始下载
-    //    case Suspened = 2 // 暂停下载
+    case Resume = 2 // 暂停下载
     case Cancel = 3 // 取消下载
     case Wait = 4 // 等待下载
     case Completed = 5 // 完成下载
@@ -16,7 +16,7 @@ typealias ALDownloadResponseBlock = (_ response: AFDownloadResponse<URL?>)-> Voi
 
 class ALDownloadInfo {
     
-//    public let downloadurl: String
+    public let downloadurl: String
     /**  下载请求  */
     var downloadRequest: DownloadRequest?
     /**  取消下载时的数据  */
@@ -24,7 +24,7 @@ class ALDownloadInfo {
     /**  下载管理者  */
     public let manager: Session
     /**  文件下载路径  */
-//    public let destinationPath: String?
+    //    public let destinationPath: String?
     /**  下载状态改变时调用  */
     var stateChangeBlock: ALDownloadStateBlock?
     /**  返回下载进度  */
@@ -58,14 +58,15 @@ class ALDownloadInfo {
         didSet{}
     }
     
-    init() {
+    init(url: String) {
+        self.downloadurl = url
         self.manager = Alamofire.Session()
     }
     
     @discardableResult
-    func download(url: String, destinationPath: String? = nil) -> Self {
+    func download(destinationPath: String? = nil) -> Self {
         if let resumeData = cancelledData {
-            let destination = createDestination(url: url, destinationPath: destinationPath)
+            let destination = createDestination(url: downloadurl, destinationPath: destinationPath)
             
             downloadRequest = manager.download(resumingWith: resumeData, to: destination).response(completionHandler: { [weak self] (defresponse) in
                 self?.cancelledData = defresponse.resumeData
@@ -76,8 +77,8 @@ class ALDownloadInfo {
                 self.respons = defaultResponse
             })
         }else{
-            let destination = createDestination(url: url, destinationPath: destinationPath)
-            downloadRequest = manager.download(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, to: destination).response(completionHandler: { [weak self] (defresponse) in
+            let destination = createDestination(url: downloadurl, destinationPath: destinationPath)
+            downloadRequest = manager.download(downloadurl, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: nil, to: destination).response(completionHandler: { [weak self] (defresponse) in
                 self?.cancelledData = defresponse.resumeData
             }).downloadProgress(closure: { (progress) in
                 self.progress = progress
@@ -91,6 +92,11 @@ class ALDownloadInfo {
         return self
     }
     
+    func resume() {
+        downloadRequest?.cancel(producingResumeData: true)
+        state = ALDownloadState.Resume
+    }
+    
     func cancel() {
         downloadRequest?.cancel()
         state = ALDownloadState.Cancel
@@ -101,6 +107,7 @@ class ALDownloadInfo {
         downloadRequest?.cancel()
         state = ALDownloadState.Wait
     }
+    
     
     func remove() {
         downloadRequest?.cancel()
@@ -127,6 +134,7 @@ class ALDownloadInfo {
         let destination: DownloadRequest.Destination = { _, response in
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = destinationPath == nil ? documentsURL.appendingPathComponent(ALDownloadedFolderName, isDirectory: true).appendingPathComponent(response.suggestedFilename!) : URL(fileURLWithPath: destinationPath!)
+            
             ALDownloadNoteCenter.post(name: Notification.Name.Info.DidComplete, object: self, userInfo: ["url": url])
             //两个参数表示如果有同名文件则会覆盖，如果路径中文件夹不存在则会自动创建
             return (fileURL, [.removePreviousFile, .createIntermediateDirectories])

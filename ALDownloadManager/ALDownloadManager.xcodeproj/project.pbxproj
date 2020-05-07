@@ -13,9 +13,7 @@
 		42DBB90E1FB30FA7008DBAD0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42DBB90C1FB30FA7008DBAD0 /* Main.storyboard */; };
 		42DBB9101FB30FA7008DBAD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42DBB90F1FB30FA7008DBAD0 /* Assets.xcassets */; };
 		42DBB9131FB30FA7008DBAD0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42DBB9111FB30FA7008DBAD0 /* LaunchScreen.storyboard */; };
-		42DBB91C1FB33CAE008DBAD0 /* ALDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBB91A1FB33CAE008DBAD0 /* ALDownloadManager.swift */; };
 		42DBB91D1FB33CAE008DBAD0 /* ALDownloadInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBB91B1FB33CAE008DBAD0 /* ALDownloadInfo.swift */; };
-		42DBB91F1FB33D6A008DBAD0 /* SingleFileDownloadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBB91E1FB33D6A008DBAD0 /* SingleFileDownloadVC.swift */; };
 		42DBB9211FB33DE9008DBAD0 /* MultipleFilesDownloadSTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42DBB9201FB33DE9008DBAD0 /* MultipleFilesDownloadSTVC.swift */; };
 		42E4778D1FB416D0008F71DD /* DownloadProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E4778C1FB416D0008F71DD /* DownloadProgressCell.swift */; };
 		C122BF6B907FD52A8941CBA2 /* Pods_ALDownloadManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D39D860F3AA819BC8E825B9D /* Pods_ALDownloadManager.framework */; };
@@ -30,9 +28,7 @@
 		42DBB90F1FB30FA7008DBAD0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		42DBB9121FB30FA7008DBAD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42DBB9141FB30FA7008DBAD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		42DBB91A1FB33CAE008DBAD0 /* ALDownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALDownloadManager.swift; sourceTree = "<group>"; };
 		42DBB91B1FB33CAE008DBAD0 /* ALDownloadInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALDownloadInfo.swift; sourceTree = "<group>"; };
-		42DBB91E1FB33D6A008DBAD0 /* SingleFileDownloadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleFileDownloadVC.swift; sourceTree = "<group>"; };
 		42DBB9201FB33DE9008DBAD0 /* MultipleFilesDownloadSTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipleFilesDownloadSTVC.swift; sourceTree = "<group>"; };
 		42E4778C1FB416D0008F71DD /* DownloadProgressCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadProgressCell.swift; sourceTree = "<group>"; };
 		487B768494A710E4E924A812 /* Pods-ALDownloadManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ALDownloadManager.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ALDownloadManager/Pods-ALDownloadManager.debug.xcconfig"; sourceTree = "<group>"; };
@@ -56,7 +52,6 @@
 			isa = PBXGroup;
 			children = (
 				422146FA1FB972EB00A7AEA6 /* AlamofireExtension.swift */,
-				42DBB91A1FB33CAE008DBAD0 /* ALDownloadManager.swift */,
 				42DBB91B1FB33CAE008DBAD0 /* ALDownloadInfo.swift */,
 			);
 			name = ALDownloadManager;
@@ -90,7 +85,6 @@
 				42DBB90F1FB30FA7008DBAD0 /* Assets.xcassets */,
 				42DBB9111FB30FA7008DBAD0 /* LaunchScreen.storyboard */,
 				42DBB9141FB30FA7008DBAD0 /* Info.plist */,
-				42DBB91E1FB33D6A008DBAD0 /* SingleFileDownloadVC.swift */,
 				42DBB9201FB33DE9008DBAD0 /* MultipleFilesDownloadSTVC.swift */,
 				42E4778C1FB416D0008F71DD /* DownloadProgressCell.swift */,
 			);
@@ -231,8 +225,6 @@
 			files = (
 				42DBB90B1FB30FA7008DBAD0 /* ViewController.swift in Sources */,
 				42E4778D1FB416D0008F71DD /* DownloadProgressCell.swift in Sources */,
-				42DBB91F1FB33D6A008DBAD0 /* SingleFileDownloadVC.swift in Sources */,
-				42DBB91C1FB33CAE008DBAD0 /* ALDownloadManager.swift in Sources */,
 				42DBB91D1FB33CAE008DBAD0 /* ALDownloadInfo.swift in Sources */,
 				42DBB9091FB30FA7008DBAD0 /* AppDelegate.swift in Sources */,
 				422146FB1FB972EB00A7AEA6 /* AlamofireExtension.swift in Sources */,

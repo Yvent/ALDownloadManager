@@ -10,25 +10,9 @@ import UIKit
 
 class DownloadProgressCell: UITableViewCell {
     
-    var downloadInfoId: String!
-    
-    // TODO: 刷新会重复下载
-    var downloadurl: String?{
+    var model: ALDownloadInfo! {
         didSet {
-            fileNameLab.text = (downloadurl! as NSString).lastPathComponent
-            downloadInfoId = downloadurl
-            ALDownloadInfo().download(url: downloadurl!, destinationPath: nil)
-                .downloadProgress({ [weak self] (progress) in
-                    
-                    guard self?.downloadInfoId == self?.downloadurl else {
-                        return
-                    }
-                    let completed: Float = Float(progress.completedUnitCount)
-                    let total: Float = Float(progress.totalUnitCount)
-                    self?.progressView.progress = (completed/total)
-                }).downloadResponse { (response) in
-                    print(response)
-            }
+            parseDownloadInfo(info: model)
         }
     }
     
@@ -73,32 +57,32 @@ class DownloadProgressCell: UITableViewCell {
     
     @objc
     func didDownloadBtn()  {
-        guard let info = ALDownloadManager.getInfoForURL(url: downloadurl) else {return}
-        if info.state == ALDownloadState.Download {
-            ALDownloadManager.suspend(url: downloadurl)
-        }else if info.state == ALDownloadState.Cancel || info.state == ALDownloadState.None  {
-            ALDownloadManager.download(url: downloadurl)
-        }else if info.state == ALDownloadState.Wait  {
-            ALDownloadManager.download(url: downloadurl)
+        if model.state == ALDownloadState.Download {
+            model.resume()
+        }else if model.state == ALDownloadState.Resume || model.state == ALDownloadState.None  {
+            model.download()
+        }else if model.state == ALDownloadState.Wait  {
+             model.download()
         }
     }
     
-    func parseDownloadInfo(info: ALDownloadInfo?) {
-        info?.downloadProgress({ (progress) in
+    func parseDownloadInfo(info: ALDownloadInfo) {
+        weak var weakself = self
+        info.downloadProgress({ (progress) in
             let completed: Float = Float(progress.completedUnitCount)
             let total: Float = Float(progress.totalUnitCount)
-            self.progressView.progress = (completed/total)
+            weakself?.progressView.progress = (completed/total)
         })
-        info?.stateChangeBlock = { [weak self] state in
-            self?.parseDownloadState(state: state)
+        info.stateChangeBlock = { state in
+            weakself?.parseDownloadState(state: state)
         }
-        parseDownloadState(state: info?.state)
+        parseDownloadState(state: info.state)
     }
     
     func parseDownloadState(state: ALDownloadState?)  {
         if state == ALDownloadState.Download {
             downloadBtn.setImage(UIImage(named: "pause"), for: .normal)
-        }else if state == ALDownloadState.Cancel || state == ALDownloadState.None  {
+        }else if state == ALDownloadState.Resume || state == ALDownloadState.None  {
             downloadBtn.setImage(UIImage(named: "download"), for: .normal)
         }else if state == ALDownloadState.Wait  {
             downloadBtn.setImage(UIImage(named: "clock"), for: .normal)

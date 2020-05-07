@@ -18,7 +18,7 @@ let ScreenHeight = UIScreen.main.bounds.height
 class ViewController: UIViewController {
 
     
-    let downloadStyles: Array<Dictionary<String,UIViewController.Type>> = [["单文件下载":SingleFileDownloadVC.self],
+    let downloadStyles: Array<Dictionary<String,UIViewController.Type>> = [
                                                                            ["多文件下载":MultipleFilesDownloadSTVC.self]]
     var alTableView: UITableView!
     
