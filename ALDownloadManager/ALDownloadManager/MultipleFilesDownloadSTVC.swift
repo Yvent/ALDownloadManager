@@ -32,6 +32,10 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
     }
     
     func initUI() {
+        
+    
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(didRightBtn))
+        
         view.backgroundColor = UIColor.white
         alTableView.frame = CGRect(x: 0, y: 0, width: ScreenWidth, height: ScreenHeight-60)
         alTableView.delegate = self
@@ -40,6 +44,12 @@ class MultipleFilesDownloadSTVC: UIViewController ,UITableViewDataSource,UITable
         view.addSubview(alTableView)
     }
     
+    @objc
+    func didRightBtn() {
+        downloadInfos.forEach { (info) in
+            info.download()
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return downloadInfos.count
